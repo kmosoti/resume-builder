@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "resume-builder"
+version = "0.1.0"
+description = "Python-first, source-first resume builder"
+requires-python = ">=3.11"
+dependencies = [
+  "click>=8.1.7",
+  "jinja2>=3.1.4",
+  "jsonschema>=4.23.0",
+  "reportlab>=4.2.2",
+]
+
+[tool.setuptools.packages.find]
+include = ["resume_builder*"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+no_implicit_optional = true
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
