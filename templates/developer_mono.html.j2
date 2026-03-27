@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ resume.basics.name }} | Resume</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --surface: #ffffff;
+      --text: #1f2937;
+      --muted: #5b6472;
+      --rule: #d7dce3;
+      --accent: #2563eb;
+      --sidebar: #eef2f7;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --sans: Inter, Arial, Helvetica, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.5; }
+    .page { max-width: 1040px; margin: 24px auto; background: var(--surface); box-shadow: 0 10px 30px rgba(15,23,42,.08); border: 1px solid #e7ebf0; }
+    .header { padding: 40px 44px 20px; }
+    .name { margin: 0; font-family: var(--mono); font-size: 2.8rem; line-height: 1; font-weight: 700; letter-spacing: -.03em; }
+    .headline { margin-top: 14px; color: var(--accent); font-family: var(--mono); font-weight: 600; font-size: 1.1rem; }
+    .summary { margin-top: 32px; max-width: 760px; font-size: 1.04rem; }
+    .content { display: grid; grid-template-columns: 270px 1fr; border-top: 1px solid var(--rule); }
+    aside { background: var(--sidebar); padding: 28px 24px 32px; border-right: 1px solid var(--rule); }
+    main { padding: 28px 32px 36px; }
+    .section-title { margin: 0 0 12px; font-family: var(--mono); font-size: .96rem; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; border-bottom: 2px solid var(--accent); padding-bottom: 8px; }
+    .stack + .stack { margin-top: 24px; }
+    .contact a, .company a { color: var(--accent); text-decoration: none; }
+    .contact div + div { margin-top: 8px; }
+    .skill-group { margin-top: 14px; }
+    .skill-group h4 { margin: 0 0 6px; font-family: var(--mono); font-size: .95rem; }
+    .skill-group p, .small { margin: 0; font-size: .95rem; color: var(--text); }
+    .small + .small { margin-top: 8px; }
+    .entry { padding: 0 0 24px; margin-bottom: 24px; border-bottom: 1px solid #ebeff4; }
+    .entry:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+    .entry-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+    .role { margin: 0; font-family: var(--mono); font-size: 1.15rem; font-weight: 700; }
+    .dates { color: var(--muted); font-size: .94rem; white-space: nowrap; }
+    .company { margin-top: 6px; color: var(--accent); font-weight: 600; }
+    ul { margin: 12px 0 0 18px; padding: 0; }
+    li + li { margin-top: 8px; }
+    @media (max-width: 860px) {
+      .content { grid-template-columns: 1fr; }
+      aside { border-right: 0; border-bottom: 1px solid var(--rule); }
+      .header { padding: 28px 24px 18px; }
+      main { padding-left: 24px; padding-right: 24px; }
+      .name { font-size: 2.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <article class="page">
+    <header class="header">
+      <h1 class="name">{{ resume.basics.name }}</h1>
+      <div class="headline">{{ resume.basics.label }}</div>
+      <p class="summary">{{ resume.basics.summary }}</p>
+    </header>
+
+    <section class="content">
+      <aside>
+        <div class="stack contact">
+          <h2 class="section-title">Profiles</h2>
+          {% for profile in resume.basics.profiles %}
+          <div><a href="{{ profile.url }}">{{ profile.network }}{% if profile.username %}: {{ profile.username }}{% endif %}</a></div>
+          {% endfor %}
+          <div><a href="mailto:{{ resume.basics.email }}">{{ resume.basics.email }}</a></div>
+        </div>
+
+        <div class="stack">
+          <h2 class="section-title">Skills</h2>
+          {% for skill in resume.skills %}
+          <div class="skill-group">
+            <h4>{{ skill.name }}</h4>
+            <p>{{ skill.keywords | join(', ') }}</p>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="stack">
+          <h2 class="section-title">Certifications</h2>
+          {% for cert in resume.certificates %}
+          <div class="small">{{ cert.name }}</div>
+          {% endfor %}
+        </div>
+      </aside>
+
+      <main>
+        <section>
+          <h2 class="section-title">Experience</h2>
+          {% for job in resume.work %}
+          <div class="entry">
+            <div class="entry-head">
+              <h3 class="role">{{ job.position }}</h3>
+              <div class="dates">{{ job.startDate }}{% if job.endDate %} – {{ job.endDate }}{% else %} – Present{% endif %}</div>
+            </div>
+            <div class="company">{{ job.name }}</div>
+            {% if job.summary %}<p>{{ job.summary }}</p>{% endif %}
+            {% if job.highlights %}
+            <ul>
+              {% for item in job.highlights %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </section>
+
+        <section>
+          <h2 class="section-title">Education</h2>
+          {% for edu in resume.education %}
+          <div class="entry">
+            <div class="entry-head">
+              <h3 class="role">{{ edu.studyType }} {{ edu.area }}</h3>
+              <div class="dates">{{ edu.endDate }}</div>
+            </div>
+            <div class="company">{{ edu.institution }}</div>
+          </div>
+          {% endfor %}
+        </section>
+      </main>
+    </section>
+  </article>
+</body>
+</html>
